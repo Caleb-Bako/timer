@@ -1,121 +1,235 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native'
-import React, { useState } from 'react'
-import Slider from '@react-native-community/slider'
+import { StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import Slider from '@react-native-community/slider';
+import AddTimer from './AddTimer';
 import CreateTimer from './CreateTimer';
+import List from './List';
+import CountDown from './CountDownButton';
 
 const TimeScroll = () => {
-  const [hour,setHour] = useState('');
-  const [minutes,setMinutes] = useState('');
-  const [seconds,setSeconds] = useState('');
+  const [hour, setHour] = useState('');
+  const [minutes, setMinutes] = useState('');
+  const [seconds, setSeconds] = useState('');
+  const [selectedId,setSelectedId] = useState([]);
+  const [visble,setVisible] =useState(false);
+  const [isRunning, setIsRunning] = useState(false);
+  const [ar, setAr] = useState([]);
+  const [toggleLoop,setToggleLoop] = useState(false);
 
+  useEffect(() => {
+    let interval = null;
+
+    if (isRunning && (hour > 0 || minutes > 0 || seconds > 0)) {
+      interval = setInterval(() => {
+        if (seconds > 0) {
+          setSeconds((prevSeconds) => prevSeconds - 1);
+        } else if (minutes > 0) {
+          setMinutes((prevMinutes) => prevMinutes - 1);
+          setSeconds(59);
+        } else if (hour > 0) {
+          setHour((prevHours) => prevHours - 1);
+          setMinutes(59);
+          setSeconds(59);
+        }
+      }, 1000);
+    } else if (hour === 0 && minutes === 0 && seconds === 0) {
+      setIsRunning(false);
+      clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+  }, [isRunning, hour, minutes, seconds]);
+
+  // console.log(visble);
+
+  useEffect(()=>{
+    if (selectedId>''){
+      console.log('iT works',selectedId);
+      setHour(selectedId.hour);
+      setMinutes(selectedId.minutes);
+      setSeconds(selectedId.seconds);
+    }
+    else if(selectedId===''){
+      console.log('em[ty');
+    }
+
+  },[selectedId])
+  
   const handleHourChange = (value) => {
-    const numericValue = parseInt(value, 10); // Parse the input as a number
+    const numericValue = parseInt(value, 10);
     if (!isNaN(numericValue) && numericValue >= 0 && numericValue <= 23) {
-      setHour(numericValue); // Set hour within valid range
+      setHour(numericValue);
     }
   };
-  const handleMinutesChange = (value) => {
-    const numericValue = parseInt(value, 10); // Parse the input as a number
-    if (!isNaN(numericValue) && numericValue >= 0 && numericValue <= 60) {
-      setMinutes(numericValue); // Set hour within valid range
-    }
-  };
-  const handleSecondsChange = (value) => {
-    const numericValue = parseInt(value, 10); // Parse the input as a number
-    if (!isNaN(numericValue) && numericValue >= 0 && numericValue <= 60) {
-      setSeconds(numericValue); // Set hour within valid range
-    }
-  };
-  return (
-    <View>
-    <View style={styles.timerssection} >
-      <View style={styles.singlesection}>
-      <TextInput
-        placeholder="00"
-        value={String(hour)} // Convert number to string for TextInput
-        onChangeText={handleHourChange} // Update state based on TextInput
-        keyboardType="numeric" // Set keyboard to numeric for number inputs
-        style={styles.inputField}
-      />
-      <Slider
-        style={styles.sliderstyle}
-        minimumValue={0}
-        maximumValue={23} // Restrict hour to 0-5 in this example
-        step={1} // Ensure the slider moves in whole numbers
-        value={hour}
-        onValueChange={setHour} // Update state when slider moves
-        minimumTrackTintColor="#FFFFFF"
-        maximumTrackTintColor="#000000"
-      />
-      </View>
-      <View style={styles.singlesection}>
-        <TextInput
-          placeholder="00"
-          value={String(minutes)} // Convert number to string for TextInput
-          onChangeText={handleMinutesChange} // Update state based on TextInput
-          keyboardType="numeric" // Set keyboard to numeric for number inputs
-          style={styles.inputField}
-        />
-        <Slider
-          style={styles.sliderstyle}
-          minimumValue={0}
-          maximumValue={60} // Restrict hour to 0-5 in this example
-          step={1} // Ensure the slider moves in whole numbers
-          value={minutes}
-          onValueChange={setMinutes} // Update state when slider moves
-          minimumTrackTintColor="#FFFFFF"
-          maximumTrackTintColor="#000000"
-        />
-      </View>
-      <View style={styles.singlesection}>
-        <TextInput
-        placeholder="00"
-        value={String(seconds)} // Convert number to string for TextInput
-        onChangeText={handleSecondsChange} // Update state based on TextInput
-        keyboardType="numeric" // Set keyboard to numeric for number inputs
-        style={styles.inputField}
-      />
-      <Slider
-        style={styles.sliderstyle}
-        minimumValue={0}
-        maximumValue={60} // Restrict hour to 0-5 in this example
-        step={1} // Ensure the slider moves in whole numbers
-        value={seconds}
-        onValueChange={setSeconds} // Update state when slider moves
-        minimumTrackTintColor="#FFFFFF"
-        maximumTrackTintColor="#000000"
-      />
-      </View>
-    </View>
-    <CreateTimer/>
-    </View>
-  )
-} 
 
-export default TimeScroll
+  const handleMinutesChange = (value) => {
+    const numericValue = parseInt(value, 10);
+    if (!isNaN(numericValue) && numericValue >= 0 && numericValue < 60) {
+      setMinutes(numericValue);
+    }
+  };
+
+  const handleSecondsChange = (value) => {
+    const numericValue = parseInt(value, 10);
+    if (!isNaN(numericValue) && numericValue >= 0 && numericValue < 60) {
+      setSeconds(numericValue);
+    }
+  };
+
+  return (
+    <View style={styles.timerbody}>
+      <View style={styles.timerssection}>
+        <View style={styles.singlesection}>
+          <TextInput
+            placeholder="00"
+            placeholderTextColor='#fff'
+            value={String(hour)}
+            onChangeText={handleHourChange}
+            keyboardType="numeric"
+            style={styles.inputField}
+          />
+          <Slider
+            style={styles.sliderstyle}
+            minimumValue={0}
+            maximumValue={23}
+            step={1}
+            value={hour}
+            onValueChange={setHour}
+            thumbTintColor='#664EFF'
+            minimumTrackTintColor="#FFFFFF"
+            maximumTrackTintColor="#000000"
+          />
+        </View>
+        <View style={styles.singlesection}>
+          <TextInput
+            placeholder="00"
+            placeholderTextColor='#fff'
+            value={String(minutes)}
+            onChangeText={handleMinutesChange}
+            keyboardType="numeric"
+            style={styles.inputField}
+          />
+          <Slider
+            style={styles.sliderstyle}
+            minimumValue={0}
+            maximumValue={59} // Corrected to 59
+            step={1}
+            value={minutes}
+            onValueChange={setMinutes}
+            thumbTintColor='#664EFF'
+            minimumTrackTintColor="#FFFFFF"
+            maximumTrackTintColor="#000000"
+          />
+        </View>
+        <View style={styles.singlesection}>
+          <TextInput
+            placeholder="00"
+            placeholderTextColor='#fff'
+            value={String(seconds)}
+            onChangeText={handleSecondsChange}
+            keyboardType="numeric"
+            style={styles.inputField}
+          />
+          <Slider
+            style={styles.sliderstyle}
+            minimumValue={0}
+            maximumValue={59} // Corrected to 59
+            step={1}
+            thumbTintColor='#664EFF'
+            value={seconds}
+            onValueChange={setSeconds}
+            minimumTrackTintColor="#FFFFFF"
+            maximumTrackTintColor="#000000"
+          />
+        </View>
+      </View>
+      <View>
+          <CountDown 
+            isRunning={isRunning} 
+            setIsRunning={setIsRunning} 
+            setHours={setHour} 
+            hour={hour}
+            setMinutes={setMinutes}
+            minutes={minutes} 
+            setSeconds={setSeconds}
+            seconds={seconds}
+            selectedId={selectedId}
+            toggleLoop={toggleLoop}
+            setToggleLoop={setToggleLoop}
+            ar={ar}
+            setSelectedId={setSelectedId}
+          />
+        </View>
+      {visble===true&&(
+        <AddTimer
+          hours={hour}
+          setHours={setHour}
+          minutes={minutes}
+          setMinutes={setMinutes}
+          seconds={seconds}
+          setSeconds={setSeconds}
+          selectedId={selectedId}
+          setSelectedId={setSelectedId}
+          setVisible={setVisible}
+        />
+      )}
+      {visble===false &&(
+        <View style={styles.container}>
+          <List 
+            isRunning={isRunning}  
+            setHour={setHour}
+            setMinutes={setMinutes}
+            setSeconds={setSeconds}
+            setVisible={setVisible}
+            ar={ar}
+            setAr={setAr}
+            setSelectedId={setSelectedId}
+            toggleLoop={toggleLoop}
+          />
+          <CreateTimer setVisible={setVisible} 
+          setSelectedId={setSelectedId} setHours={setHour} setMinutes={setMinutes} setSeconds={setSeconds}/>
+        </View>
+      )}
+    </View>
+  );
+};
+
+export default TimeScroll;
 
 const styles = StyleSheet.create({
-  timerssection:{
-    flexDirection:'row',
-    gap:20,
+  timerbody:{
+    flex:1,
+    padding:10,
   },
-  singlesection:{
-    width:105
+  timerssection: {
+    flexDirection: 'row',
+    gap: 20,
   },
-  inputField:{
-    borderWidth:1,
-    borderBottomWidth:0,
-    borderRadius:5,
-    alignItems:'center',
-    justifyContent:'center',
+  singlesection: {
+    width: 100,
+  },
+  inputField: {
+    borderWidth: 1,
+    borderBottomWidth: 0,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: 8,
-    fontSize:80
+    fontSize: 75,
+    color:'#fff'
   },
-  sliderstyle:{
-    width: 130, 
+  sliderstyle: {
+    width: 123,
     height: 40,
-    marginTop:-20,
-    marginLeft:-10,
+    marginTop: -20,
+    marginLeft: -10,
+  },
+  container: {
+    flex: 1, 
+  },
+  countdown_btn:{
+    position:'absolute',
+    top:420,
+    left:270,
   }
-  
-})
+});

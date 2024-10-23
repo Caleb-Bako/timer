@@ -7,7 +7,8 @@ export default function Index() {
       style={{
         flex: 1,
         alignItems: "center",
-        paddingTop:100
+        paddingTop:50,
+        backgroundColor:'#1F1B2E',
       }}
     >
       <TimeScroll/>
