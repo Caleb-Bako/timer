@@ -1,50 +1,38 @@
-# Welcome to your Expo app 👋
+# Timer App ⏱️
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A sleek and user-friendly timer application built using **React Native** and **SQLite**. This app allows users to create, manage, and utilize multiple timers with advanced features like a multi-select looping system.  
 
-## Get started
+🚧 **Note**: This app is currently a work in progress. Stay tuned for more features!
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## Features 🚀
 
-2. Start the app
+- **Create and Manage Timers**:  
+  Easily add, edit, or delete timers.
 
-   ```bash
-    npx expo start
-   ```
+- **Multi-Select System**:  
+  Select multiple timers to run or manage simultaneously.
 
-In the output, you'll find options to open the app in a
+- **Looping Feature**:  
+  Loop timers for recurring activities or routines.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- **Offline Functionality**:  
+  Data is stored locally using SQLite, ensuring access without internet.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## Tech Stack 💻
 
-When you're ready, run:
+- **Frontend**: React Native  
+- **Database**: SQLite  
 
-```bash
-npm run reset-project
-```
+---
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Future Plans 🌟
+[]Notifications:
+Get alerts when timers complete.
 
-## Learn more
+[]Design Enhancements:
+Improve the user interface for a more intuitive experience.
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
