@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, ImageBackground, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useDatabase, createTable, fetchTimers, updateProtocol,deleteTimer } from '@/app/hooks/database';
@@ -62,25 +62,6 @@ const List = ({setHour,setMinutes,setSeconds,setSelectedId,setVisible,ar,setAr,t
   const renderTimerItem = ({ item }) => (
     <View style={styles.timerBody}>
       {toggleLoop === true ? (
-        // <TouchableOpacity
-        // onPress={() => toggleItem(item)}
-        // style={{
-        //   backgroundColor: '#fff',
-        //   borderRadius: 50,
-        //   borderWidth:2,
-        //   width: 20,
-        //   height: 20,
-        //   justifyContent: 'center',
-        //   alignItems: 'center',
-        //   }}>
-        //   {sequence.map((seq, index) => (
-        //   <View key={index}>
-        //     {item.id === seq.id &&(
-        //       <Text key={seq.id}>{index}</Text>
-        //     )}
-        //   </View>
-        // ))}
-        // </TouchableOpacity>
         <Pressable 
         delayLongPress={1000} 
         onPress={() =>toggleItem(item)} 
