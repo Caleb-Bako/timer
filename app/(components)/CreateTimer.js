@@ -1,8 +1,8 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import Entypo from '@expo/vector-icons/Entypo';
 
-const CreateTimer = ({setVisible,setSelectedId,setHours,setMinutes,setSeconds}) => {
+const CreateTimer = ({isRunning, setVisible,setSelectedId,setHours,setMinutes,setSeconds}) => {
   const handlePress = () => {
     setVisible(true);
     setSelectedId([]); // This toggles between true and false
@@ -12,10 +12,10 @@ const CreateTimer = ({setVisible,setSelectedId,setHours,setMinutes,setSeconds}) 
   };
   return (
     <View>
-      <TouchableOpacity style={styles.createContainer}  onPress={handlePress}>
+      <Pressable disabled={isRunning} style={styles.createContainer}  onPress={handlePress}>
         <Entypo name="plus" size={24} color="#fff"/>
         <Text style={styles.createText}>Create</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   )
 }

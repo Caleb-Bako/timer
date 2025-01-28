@@ -1,64 +1,93 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { updateProtocol, useDatabase } from '@/hooks/database';
+import { updateProtocol, useDatabase } from '@/app/hooks/database';
 import Entypo from '@expo/vector-icons/Entypo';
 
-const CountDown = ({isRunning,setIsRunning,hour,setHours,minutes,setMinutes,seconds,setSeconds,selectedId,setSelectedId,ar,toggleLoop,setToggleLoop}) => {
+const CountDown = ({
+  isRunning,setIsRunning,hour,setHours,minutes,setMinutes,seconds,setSeconds,
+  selectedId,setSelectedId,ar,toggleLoop,setToggleLoop,setModalVisible,setAr,
+ setSequence
+}) => {
   const db = useDatabase();
   const[arrId,setArrId] = useState(0);
+  
 
   const startTimer = () => {
     if (!isRunning) {
       setIsRunning(true);
     }
   };
+
+  const setLoop = () => {
+    setToggleLoop(!toggleLoop)
+    setAr([])
+    setArrId(0)
+    setSequence([])
+    setHours('');
+    setMinutes('');
+    setSeconds('');
+  }
   const stopTimer = () => {
     setIsRunning(false);
+    console.log('Timer Stopped')
   };
   const resetTimer = () => {
     setIsRunning(false);
     setHours(selectedId.hour);
     setMinutes(selectedId.minutes);
     setSeconds(selectedId.seconds);
+    console.log('Timer Reset')
   };
   const longReset = () => {
     setIsRunning(false);
     setHours('');
     setMinutes('');
     setSeconds('');
+    console.log('Timer Long Reset')
   };
-  console.log(isRunning);
 
-  const loopTimer = async () => {
-    if (ar.length > 0 && (hour === '' && minutes === '' && seconds === '') ||(hour === 0 && minutes === 0 && seconds === 0)){
-      const id = ar[arrId];
-      await updateProtocol(db,id,setSelectedId);
-      setIsRunning(true);
-    }
-    if (arrId < ar.length - 1){
-      setArrId((prevId) => prevId + 1);
-    }else {
-      console.log('Reached the end of the array, no more items to process.');
-      setArrId(0);
-      // Optionally handle what happens when you've reached the end of the array
-    }
-  };
+  // const loopTimer = async () => {
+  //   if (ar.length > 0 && (hour === '' && minutes === '' && seconds === '') ||(hour === 0 && minutes === 0 && seconds === 0)){
+  //     const id = ar[arrId];
+  //     await updateProtocol(db,id,setSelectedId);
+  //     setIsRunning(true);
+  //     console.log("It is ",isRunning)
+  //   }
+  //   if (arrId < ar.length - 1){
+  //     setArrId((prevId) => prevId + 1);
+  //   }else{
+  //     console.log('Reached the end of the array, no more items to process.');
+  //     setArrId(0);
+  //   }
+  // };
  
+  const loop =  () => {
+    const id = ar[arrId];
+    updateProtocol(db,id,setSelectedId);
+    setArrId((prevId) => prevId + 1);
+    setIsRunning(true);
+    console.log('Re.',id);
+  }
 
   useEffect(()=>{
-    if(hour === 0 && minutes === 0 && seconds === 0 ){
-      console.log('loop again')
-      loopTimer();
-    }else{
-      console.log('not yet')
-    }
-    console.log(arrId);
+      if(arrId < ar.length && (hour === 0 && minutes === 0 && seconds === 0) ){
+        loop()
+        setModalVisible(true);
+      }else if(ar.length-1 < arrId){
+        console.log('Reached the end')
+        setAr([])
+        setArrId(0)
+        setSequence([])
+      }
+      else{
+        console.log('not yet')
+        setIsRunning(true);
+      }
   },[hour,minutes,seconds]);
-  
-
+  console.log('Value', arrId,'Running state',isRunning, 'Array',ar , 'Hour',hour)
   return (
     <View style={styles.countdown_btn}>
       <TouchableOpacity style={styles.button_body} onPress={resetTimer} onLongPress={longReset}>
@@ -69,9 +98,9 @@ const CountDown = ({isRunning,setIsRunning,hour,setHours,minutes,setMinutes,seco
           <TouchableOpacity style={styles.playButton} onPress={stopTimer}>
             <FontAwesome5 name="stop" size={20} color="white" />
           </TouchableOpacity>
-        ) : isRunning === false && ar && ar.length > 0 && (hour === '' && minutes === '' && seconds === '') ? (
+        ) : isRunning === false && ar && ar.length > 0 && ((hour === 0 && minutes === 0 && seconds === 0) || (hour === '' && minutes === '' && seconds === '')) ? (
           // Second condition: Show a reset button (or any other button) when not running and array has items
-          <TouchableOpacity style={styles.playButton} onPress={loopTimer}>
+          <TouchableOpacity style={styles.playButton} onPress={loop}>
             <MaterialIcons name="loop" size={20} color="white" />
         </TouchableOpacity>
         ) : isRunning === false && ar && (ar.length === 0 || hour > 0 && minutes > 0 && seconds > 0 ) && (
@@ -82,13 +111,15 @@ const CountDown = ({isRunning,setIsRunning,hour,setHours,minutes,setMinutes,seco
             </TouchableOpacity>
           </View>
       )}
-      <TouchableOpacity
-          onPress={() => setToggleLoop(!toggleLoop)}
-          style={styles.loopBtn}>
+      <Pressable
+          onPress={setLoop}
+          style={styles.loopBtn}
+          disabled={isRunning}
+          >
         {toggleLoop === true && (
           <Entypo name="check" size={10} color="#6C4EB3" />
         )}
-      </TouchableOpacity>
+      </Pressable>
     </View>
   )
 }

@@ -92,14 +92,17 @@ export const fetchTimers = async (db, setTimers) => {
 export const updateProtocol = async (db,id,setSelectedId) => {
   if (!db) return;
   try{
+    if(id){
     const result =  await db.getAllAsync('SELECT * FROM timers WHERE id = ?',id);
     if(result){
       const timer = result[0]; // Access the first item in the array
       console.log('protocol', timer.id, timer.name);
       setSelectedId(timer);
     }
+  }
   }catch (error) {
     console.error('Error editing timers:', error);
+    console.log('the id',id)
   }
 }
 

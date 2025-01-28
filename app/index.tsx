@@ -1,4 +1,4 @@
-import TimeScroll from "@/components/TimeScroll";
+import TimeScroll from "@/app/(components)/TimeScroll";
 import { Text, View } from "react-native";
 
 export default function Index() {

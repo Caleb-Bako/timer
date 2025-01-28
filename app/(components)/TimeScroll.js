@@ -1,10 +1,12 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View,Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Slider from '@react-native-community/slider';
 import AddTimer from './AddTimer';
 import CreateTimer from './CreateTimer';
 import List from './List';
 import CountDown from './CountDownButton';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import ModalView from './modal';
 
 const TimeScroll = () => {
   const [hour, setHour] = useState('');
@@ -15,6 +17,8 @@ const TimeScroll = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [ar, setAr] = useState([]);
   const [toggleLoop,setToggleLoop] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [sequence,setSequence] = useState([]);
 
   useEffect(() => {
     let interval = null;
@@ -33,10 +37,14 @@ const TimeScroll = () => {
         }
       }, 1000);
     } else if (hour === 0 && minutes === 0 && seconds === 0) {
-      setIsRunning(false);
       clearInterval(interval);
+      setIsRunning(false);
+      console.log('Timer OG')
+    }else if (hour === 0 && minutes === 0 && seconds === 0) {
+      clearInterval(interval);
+      setIsRunning(false);
+      console.log('Timer OG')
     }
-
     return () => clearInterval(interval);
   }, [isRunning, hour, minutes, seconds]);
 
@@ -44,7 +52,7 @@ const TimeScroll = () => {
 
   useEffect(()=>{
     if (selectedId>''){
-      console.log('iT works',selectedId);
+      // console.log('iT works',selectedId);
       setHour(selectedId.hour);
       setMinutes(selectedId.minutes);
       setSeconds(selectedId.seconds);
@@ -77,7 +85,10 @@ const TimeScroll = () => {
   };
 
   return (
-    <View style={styles.timerbody}>
+    <Animated.View 
+    entering={FadeIn}
+    exiting={FadeOut}
+    style={styles.timerbody}>
       <View style={styles.timerssection}>
         <View style={styles.singlesection}>
           <TextInput
@@ -155,8 +166,12 @@ const TimeScroll = () => {
             seconds={seconds}
             selectedId={selectedId}
             toggleLoop={toggleLoop}
+            setModalVisible={setModalVisible}
+            modalVisible={modalVisible}
             setToggleLoop={setToggleLoop}
             ar={ar}
+            setAr={setAr}
+            setSequence={setSequence}
             setSelectedId={setSelectedId}
           />
         </View>
@@ -173,6 +188,10 @@ const TimeScroll = () => {
           setVisible={setVisible}
         />
       )}
+      {modalVisible && (
+        <ModalView modalVisible={modalVisible} setModalVisible={setModalVisible} setIsRunning={setIsRunning}/> 
+      )}
+      
       {visble===false &&(
         <View style={styles.container}>
           <List 
@@ -182,15 +201,17 @@ const TimeScroll = () => {
             setSeconds={setSeconds}
             setVisible={setVisible}
             ar={ar}
+            sequence={sequence}
+            setSequence={setSequence}
             setAr={setAr}
             setSelectedId={setSelectedId}
             toggleLoop={toggleLoop}
           />
-          <CreateTimer setVisible={setVisible} 
+          <CreateTimer setVisible={setVisible}  isRunning={isRunning}
           setSelectedId={setSelectedId} setHours={setHour} setMinutes={setMinutes} setSeconds={setSeconds}/>
         </View>
       )}
-    </View>
+    </Animated.View>
   );
 };
 
@@ -208,6 +229,15 @@ const styles = StyleSheet.create({
   singlesection: {
     width: 100,
   },
+  button: {
+    backgroundColor: '#007bff',
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+  },
   inputField: {
     borderWidth: 1,
     borderBottomWidth: 0,
@@ -216,7 +246,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 8,
     fontSize: 75,
-    color:'#fff'
+    color:'#fff',
+    height:150
   },
   sliderstyle: {
     width: 123,

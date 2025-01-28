@@ -8,6 +8,14 @@ export default function RootLayout() {
       }
     }>
       <Stack.Screen name="index" />
+      <Stack.Screen
+        name="(components)"
+        options={{
+          presentation: 'transparentModal',
+          animation: 'fade',
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

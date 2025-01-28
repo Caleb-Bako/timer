@@ -1,75 +1,127 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ImageBackground, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { useDatabase, createTable, fetchTimers, updateProtocol,deleteTimer } from '@/hooks/database';
-import Entypo from '@expo/vector-icons/Entypo';
+import { useDatabase, createTable, fetchTimers, updateProtocol,deleteTimer } from '@/app/hooks/database';
 
-const List = ({setHour,setMinutes,setSeconds,setSelectedId,setVisible,ar,setAr,toggleLoop,isRunning}) => {
+const List = ({setHour,setMinutes,setSeconds,setSelectedId,setVisible,ar,setAr,toggleLoop,isRunning,sequence,setSequence}) => {
   const [timers, setTimers] = useState([]);
   const [visble,setVisble] = useState(false);
   const [selectedTimer, setSelectedTimer] = useState(null);
- 
-  const db = useDatabase(); // Hook for managing database connection
+  const db = useDatabase();
 
   const toggleItem = (item) => {
     if (ar.includes(item.id)) {
-      // If the item is already in the array, remove it (uncheck)
       setAr((prevAr) => prevAr.filter((i) => i !== item.id));
+      setSequence((prevAr) => prevAr.filter((i) => i.id !== item.id));
+
     } else {
-      // If the item is not in the array, add it (check)
       setAr((prevAr) => [...prevAr, item.id]);
+      const newItem = { id: item.id};
+      setSequence([...sequence, newItem]);
     }
   };
+  
   useEffect(() => {
     const init = async () => {
       if (db) {
-        await createTable(db); // Ensure table exists
-        await fetchTimers(db, setTimers); // Fetch timers from DB
+        await createTable(db);
+        await fetchTimers(db, setTimers);
       }
     };
     init();
   }, [db]); 
 
+  useEffect(()=>{
+    if(toggleLoop===true){
+      setSelectedTimer(null);
+    }
+  },[toggleLoop])
+
   const handleDelete = async(id) =>{
     await deleteTimer(db,id)
   }
  
-  const editSelectedTimer = async(id) => {
-    if(selectedTimer === id){
-      setSelectedTimer(null);
-      setHour('');
-      setMinutes('');
-      setSeconds('');
-    }else{
-      await updateProtocol(db,id,setSelectedId);
-      setSelectedTimer(id);
-    }
+  const editSelectedTimer = (id) => {
+      if(selectedTimer === id){
+        setSelectedTimer(null);
+        setHour('');
+        setMinutes('');
+        setSeconds('');
+      }else{
+        updateProtocol(db,id,setSelectedId);
+        setSelectedTimer(id);
+      }
   }
 
   const handlePress = () => {
-    setVisble(!visble); // This toggles between true and false
+    setVisble(!visble); 
   };
 
+  console.log("Seq: ",sequence)
   const renderTimerItem = ({ item }) => (
     <View style={styles.timerBody}>
-      {toggleLoop === true && (
-        <TouchableOpacity
-        onPress={() => toggleItem(item)}
-        style={{
-          backgroundColor: '#fff',
-          borderRadius: 50,
-          borderWidth:2,
-          width: 20,
-          height: 20,
-          justifyContent: 'center',
-          alignItems: 'center',
-          }}>
-          {ar.includes(item.id) && (
-            <Entypo name="check" size={15} color="#6C4EB3" />
+      {toggleLoop === true ? (
+        // <TouchableOpacity
+        // onPress={() => toggleItem(item)}
+        // style={{
+        //   backgroundColor: '#fff',
+        //   borderRadius: 50,
+        //   borderWidth:2,
+        //   width: 20,
+        //   height: 20,
+        //   justifyContent: 'center',
+        //   alignItems: 'center',
+        //   }}>
+        //   {sequence.map((seq, index) => (
+        //   <View key={index}>
+        //     {item.id === seq.id &&(
+        //       <Text key={seq.id}>{index}</Text>
+        //     )}
+        //   </View>
+        // ))}
+        // </TouchableOpacity>
+        <Pressable 
+        delayLongPress={1000} 
+        onPress={() =>toggleItem(item)} 
+        disabled={isRunning}
+        style={[styles.timerItem,ar.includes(item.id) && {borderWidth: 2,borderColor: '#664EFF',},{ opacity: isRunning ? 0.5 : 1}]}
+      >
+        <MaterialCommunityIcons name="timer-sand" size={24} color="#fff" />
+        <View style={[styles.timerstrt]}>
+          <View style={styles.timerName}>
+            <Text style={styles.timerText} numberOfLines={1} ellipsizeMode="tail">
+              {item.name}:
+            </Text>
+          </View>
+          <Text style={styles.timerText}>{item.hour}h</Text>
+          <Text style={styles.timerText}>{item.minutes}m</Text>
+          <Text style={styles.timerText}>{item.seconds}s</Text>
+          {toggleLoop === true &&(
+            <View style={styles.loopOverlay}>
+              {sequence.map((seq, index) => (
+              <View key={index}>
+                {item.id === seq.id &&(
+                  <Text style={
+                    { color:'white', 
+                      backgroundColor:'#664EFF', 
+                      fontSize:10, 
+                      paddingHorizontal:3,
+                      paddingVertical:3,
+                      fontWeight:'800',
+                      borderRadius: 30,
+                    }
+                  } 
+                    key={seq.id}>{index}
+                  </Text>
+                )}
+              </View>
+              ))}
+            </View>
           )}
-        </TouchableOpacity>
-      )}
+        </View>
+      </Pressable>
+      ):(
       <Pressable 
         delayLongPress={1000} 
         onPress={() =>editSelectedTimer(item.id)} 
@@ -99,6 +151,7 @@ const List = ({setHour,setMinutes,setSeconds,setSelectedId,setVisible,ar,setAr,t
           )}
         </View>
       </Pressable>
+      )}
     </View>
   );
 
@@ -137,6 +190,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 3,
     },
+    position:'relative',
     shadowOpacity:  0.17,
     shadowRadius: 3.05,
     elevation: 4
@@ -169,5 +223,10 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     paddingLeft:108,
     gap:50
+  },
+  loopOverlay:{
+    position:'absolute',
+    top:0,
+    left:-35
   }
 });
