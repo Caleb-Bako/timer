@@ -7,6 +7,8 @@ import List from './List';
 import CountDown from './CountDownButton';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import ModalView from './modal';
+import { requestPermissions, schedulePushNotification } from '../hooks/notifications';
+import {useFonts} from "expo-font";
 
 const TimeScroll = () => {
   const [hour, setHour] = useState('');
@@ -19,6 +21,14 @@ const TimeScroll = () => {
   const [toggleLoop,setToggleLoop] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [sequence,setSequence] = useState([]);
+  const [notifications,setNotifications] = useState(0);
+  const [fontsLoaded] = useFonts({
+    'P2P': require('../../assets/fonts/PressStart2P-Regular.ttf')
+  });
+
+  if(!fontsLoaded){
+    console.log('Not found')
+  }
 
   useEffect(() => {
     let interval = null;
@@ -40,10 +50,7 @@ const TimeScroll = () => {
       clearInterval(interval);
       setIsRunning(false);
       console.log('Timer OG')
-    }else if (hour === 0 && minutes === 0 && seconds === 0) {
-      clearInterval(interval);
-      setIsRunning(false);
-      console.log('Timer OG')
+
     }
     return () => clearInterval(interval);
   }, [isRunning, hour, minutes, seconds]);
@@ -62,6 +69,16 @@ const TimeScroll = () => {
     }
 
   },[selectedId])
+
+  useEffect(()=>{
+    if(notifications === 1 && (hour === 0 && minutes === 0 && seconds === 1) ){
+      schedulePushNotification()
+      setNotifications(0);
+      console.log("Trigerring")
+    }else{
+      console.log("Not yet Trigerring")
+    }
+  },[hour, minutes, seconds,notifications])
   
   const handleHourChange = (value) => {
     const numericValue = parseInt(value, 10);
@@ -83,6 +100,8 @@ const TimeScroll = () => {
       setSeconds(numericValue);
     }
   };
+
+  requestPermissions();
 
   return (
     <Animated.View 
@@ -106,7 +125,7 @@ const TimeScroll = () => {
             step={1}
             value={hour}
             onValueChange={setHour}
-            thumbTintColor='#664EFF'
+            thumbTintColor='#6A5CFF'
             minimumTrackTintColor="#FFFFFF"
             maximumTrackTintColor="#000000"
           />
@@ -127,7 +146,7 @@ const TimeScroll = () => {
             step={1}
             value={minutes}
             onValueChange={setMinutes}
-            thumbTintColor='#664EFF'
+            thumbTintColor='#6A5CFF'
             minimumTrackTintColor="#FFFFFF"
             maximumTrackTintColor="#000000"
           />
@@ -146,7 +165,7 @@ const TimeScroll = () => {
             minimumValue={0}
             maximumValue={59} // Corrected to 59
             step={1}
-            thumbTintColor='#664EFF'
+            thumbTintColor='#6A5CFF'
             value={seconds}
             onValueChange={setSeconds}
             minimumTrackTintColor="#FFFFFF"
@@ -173,6 +192,7 @@ const TimeScroll = () => {
             setAr={setAr}
             setSequence={setSequence}
             setSelectedId={setSelectedId}
+            setNotifications={setNotifications}
           />
         </View>
       {visble===true&&(
@@ -229,15 +249,6 @@ const styles = StyleSheet.create({
   singlesection: {
     width: 100,
   },
-  button: {
-    backgroundColor: '#007bff',
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-  },
   inputField: {
     borderWidth: 1,
     borderBottomWidth: 0,
@@ -245,9 +256,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 8,
-    fontSize: 75,
+    fontSize: 40,
     color:'#fff',
-    height:150
+    height:150,
+    fontFamily:'P2P'
   },
   sliderstyle: {
     width: 123,

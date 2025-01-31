@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 16,
+    fontFamily:'P2P',
   },
   modalOverlay: {
     flex: 1,
@@ -73,5 +74,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     fontSize: 18,
     textAlign: 'center',
+    fontFamily:'P2P',
   },
 });

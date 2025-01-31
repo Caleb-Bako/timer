@@ -3,6 +3,7 @@ import { TextInput, View, StyleSheet, TouchableOpacity, Text, Pressable } from '
 import { useDatabase, createTable, insertTimer,updateTimer } from '@/app/hooks/database';
 import Entypo from '@expo/vector-icons/Entypo';
 import Feather from '@expo/vector-icons/Feather';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const AddTimer = ({ hours, setHours, minutes, setMinutes, seconds, setSeconds,selectedId,setSelectedId,setVisible}) => {
   const [name, setName] = useState('');
@@ -87,12 +88,22 @@ const AddTimer = ({ hours, setHours, minutes, setMinutes, seconds, setSeconds,se
         style={styles.input}
       />
       {selectedId.length === 0 ? (
-        <Pressable style={styles.createTimer} onPress={handleInsert}>
-          <Text style={styles.addTimer}>ADD TIMER</Text>
+        <Pressable onPress={handleInsert}>
+          <LinearGradient
+            colors={['#6A5CFF', '#D946EF']}
+            style={styles.createTimer}
+          >
+            <Text style={styles.addTimer}>ADD TIMER</Text>
+          </LinearGradient>
         </Pressable>
       ):(
-        <Pressable style={styles.createTimer} onPress={handleUpdate}>
+        <Pressable onPress={handleUpdate}>
+          <LinearGradient
+            colors={['#6A5CFF', '#D946EF']}
+            style={styles.createTimer}
+          >
           <Text style={styles.addTimer}>UPDATE</Text>
+        </LinearGradient>  
         </Pressable>
       )}
     </View>
@@ -103,7 +114,6 @@ export default AddTimer;
 
 const styles = StyleSheet.create({
   container: {
-
     marginTop:20,
     padding: 50,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',  
@@ -121,20 +131,17 @@ const styles = StyleSheet.create({
     padding: 8,
     color:'#FFF',
     borderRadius: 5,
-    backgroundColor:'rgba(52, 52, 52, 0.8)'
+    backgroundColor:'rgba(52, 52, 52, 0.8)',
+    fontFamily:'P2P',
   },
 createText:{
     fontSize:20,
     fontWeight:'500',
 },
 createTimer:{
-  borderRadius:20,
-  flexDirection:'row',
-  justifyContent: "center",
-  alignItems: "center",
-  paddingVertical:5,
+  paddingVertical:12,
+  paddingTop:20,
   marginVertical:10,
-  backgroundColor:'#6C4EB3',
   shadowColor: "#6C4EB3",
   shadowOffset: {
     width: 0,
@@ -147,7 +154,9 @@ createTimer:{
 addTimer:{
   fontSize:20,
   fontWeight:'500',
-  color:'#fff'
+  color:'#fff',
+  fontFamily:'P2P',
+  textAlign:'center',
 },
 exit:{
   position:'absolute',

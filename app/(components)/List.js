@@ -66,7 +66,7 @@ const List = ({setHour,setMinutes,setSeconds,setSelectedId,setVisible,ar,setAr,t
         delayLongPress={1000} 
         onPress={() =>toggleItem(item)} 
         disabled={isRunning}
-        style={[styles.timerItem,ar.includes(item.id) && {borderWidth: 2,borderColor: '#664EFF',},{ opacity: isRunning ? 0.5 : 1}]}
+        style={[styles.timerItem,ar.includes(item.id) && {borderWidth: 2,borderColor: '#6A5CFF',},{ opacity: isRunning ? 0.5 : 1}]}
       >
         <MaterialCommunityIcons name="timer-sand" size={24} color="#fff" />
         <View style={[styles.timerstrt]}>
@@ -108,7 +108,7 @@ const List = ({setHour,setMinutes,setSeconds,setSelectedId,setVisible,ar,setAr,t
         onPress={() =>editSelectedTimer(item.id)} 
         onLongPress={handlePress} 
         disabled={isRunning}
-        style={[styles.timerItem,selectedTimer === item.id && {borderWidth: 2,borderColor: '#664EFF',},{ opacity: isRunning ? 0.5 : 1}]}
+        style={[styles.timerItem,selectedTimer === item.id && {borderWidth: 2,borderColor: '#6A5CFF',},{ opacity: isRunning ? 0.5 : 1}]}
       >
         <MaterialCommunityIcons name="timer-sand" size={24} color="#fff" />
         <View style={[styles.timerstrt,toggleLoop === true && {gap:50}]}>
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     gap:10,
     alignItems:'center',
-    width: 400
+    // width: 400
   },
   timerItem: {
     padding: 10,
@@ -178,19 +178,21 @@ const styles = StyleSheet.create({
   },
   timerText: {
     fontSize: 12,
-    color:'#fff'
+    color:'#fff',
+    fontFamily:'P2P',
   },
   timerName:{
-    width:50,
-    height:20,
-    overflow: 'hidden'
+    width:70,
+    overflow: 'hidden',
   },
   timerList: {
     marginTop: 20,
   },
   timerstrt: {
     flexDirection: 'row',
-    gap: 60,
+    gap: 30,
+    alignItems:'center',
+    width:'90%'
   },
   editOverlay:{
     backgroundColor:'rgba(52, 52, 52, 0.8)',
