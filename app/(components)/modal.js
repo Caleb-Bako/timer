@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View ,Modal} from 'react-native';
-import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
+import Animated, { BounceIn, BounceOut } from 'react-native-reanimated';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
 export default function ModalView({modalVisible,setModalVisible,setIsRunning}) {
@@ -17,19 +17,29 @@ export default function ModalView({modalVisible,setModalVisible,setIsRunning}) {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Hello! This is a modal.</Text>
+            <View style={styles.characterBody} >
+              <View style={styles.characterEyes} >
+                <View style={styles.characterPupils} >
+                </View>
+              </View>
+              <View style={styles.characterEyes} >
+                <View style={styles.characterPupils} >
+                </View>
+              </View>
+            </View>
+            <Text style={styles.modalText}>Want to Continue?</Text>
             <View style={{flexDirection: 'row', gap: 20}}>
+            <Animated.View entering={BounceIn} exiting={BounceOut} >
               <Pressable onPress={()=> nextTimer()}>
                 <AntDesign name="checkcircle" size={64} color="#664EFF" />
               </Pressable>
-              <Pressable>
+            </Animated.View>  
+            <Animated.View entering={BounceIn} exiting={BounceOut} >
+              <Pressable onPress={() => setModalVisible(false)}>
                 <AntDesign name="closecircle" size={64} color="black" />
               </Pressable>
+            </Animated.View>
             </View>
-            {/* Button to close the modal */}
-            <Pressable style={styles.button} onPress={() => setModalVisible(false)}>
-              <Text style={styles.buttonText}>Close</Text>
-            </Pressable>
           </View>
         </View>
       </Modal>
@@ -75,5 +85,23 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     fontFamily:'P2P',
+  },
+  characterBody:{
+    width:70,
+    height:70,
+    padding:10,
+    backgroundColor:'#6A5CFF',
+    flexDirection:'row',
+    justifyContent:'space-between'
+  },
+  characterEyes:{
+    width:20,
+    height:20,
+    backgroundColor:'white'
+  },
+  characterPupils:{
+    width:10,
+    height:10,
+    backgroundColor:'black'
   },
 });
