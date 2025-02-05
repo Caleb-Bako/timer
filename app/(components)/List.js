@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     fontFamily:'P2P',
   },
   timerName:{
-    width:70,
+    width:100,
     overflow: 'hidden',
   },
   timerList: {

@@ -49,8 +49,7 @@ const styles = StyleSheet.create({
       elevation: 4,
     },
     createText:{
-        paddingTop:10,
-        fontSize:18,
+        fontSize:22,
         fontWeight:'500',
         color:'#fff',
         fontFamily:'P2P',

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextInput, View, StyleSheet, TouchableOpacity, Text, Pressable } from 'react-native';
 import { useDatabase, createTable, insertTimer,updateTimer } from '@/app/hooks/database';
-import Entypo from '@expo/vector-icons/Entypo';
 import Feather from '@expo/vector-icons/Feather';
 import { LinearGradient } from 'expo-linear-gradient';
 

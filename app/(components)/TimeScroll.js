@@ -23,7 +23,7 @@ const TimeScroll = () => {
   const [sequence,setSequence] = useState([]);
   const [notifications,setNotifications] = useState(0);
   const [fontsLoaded] = useFonts({
-    'P2P': require('../../assets/fonts/PressStart2P-Regular.ttf')
+    'P2P': require('../../assets/fonts/JetBrainsMono-VariableFont_wght.ttf')
   });
 
   if(!fontsLoaded){
@@ -259,7 +259,8 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color:'#fff',
     height:150,
-    fontFamily:'P2P'
+    fontFamily:'P2P',
+    textAlign:'center'
   },
   sliderstyle: {
     width: 123,

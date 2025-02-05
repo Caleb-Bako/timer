@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -106,8 +106,12 @@ const CountDown = ({
           // Third condition: Default play button
           <View>
             <TouchableOpacity onPress={startTimer}>
-              {/* <FontAwesome5 name="play" size={20} color="white" /> */}
-              <Image source={require('../../assets/images/arrow-button.png')} style={styles.imagesize} />
+            <LinearGradient
+              colors={['#6A5CFF', '#D946EF']}
+              style={styles.playButton}
+            >
+              <FontAwesome5 name="play" size={20} color="white" />
+            </LinearGradient>
             </TouchableOpacity>
           </View>
       )}
