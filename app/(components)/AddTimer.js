@@ -105,7 +105,8 @@ export default AddTimer;
 const styles = StyleSheet.create({
   container: {
     marginTop:20,
-    padding: 50,
+    paddingHorizontal:30,
+    paddingVertical:50,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',  
     borderRadius: 40,
     shadowColor: '#000',  
@@ -117,8 +118,10 @@ const styles = StyleSheet.create({
   },
   input: {
     borderColor: '#ccc',
+    marginTop:10,
     marginBottom: 10,
-    padding: 8,
+    paddingHorizontal:16,
+    paddingVertical:8,
     color:'#FFF',
     borderRadius: 40,
     backgroundColor:'rgba(52, 52, 52, 0.8)',
@@ -151,7 +154,7 @@ addTimer:{
 },
 exit:{
   position:'absolute',
-  left:'123%',
-  top:13
+  left:'106%',
+  top:15
 }
 });

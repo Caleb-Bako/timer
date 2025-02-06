@@ -248,11 +248,12 @@ const styles = StyleSheet.create({
   },
   singlesection: {
     width: 100,
+    padding:5
   },
   inputField: {
-    borderWidth: 1,
-    borderBottomWidth: 0,
-    borderRadius: 5,
+    // borderWidth: 1,
+    // borderBottomWidth: 0,
+    // borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 8,
