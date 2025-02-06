@@ -6,6 +6,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { updateProtocol, useDatabase } from '@/app/hooks/database';
 import Entypo from '@expo/vector-icons/Entypo';
 import { LinearGradient } from 'expo-linear-gradient';
+import Animated, { BounceIn, BounceOut } from 'react-native-reanimated';
 
 const CountDown = ({
   isRunning,setIsRunning,hour,setHours,minutes,setMinutes,seconds,setSeconds,
@@ -89,31 +90,35 @@ const CountDown = ({
               colors={['#6A5CFF', '#D946EF']}
               style={styles.playButton}
             >
-            <FontAwesome5 name="stop" size={20} color="white" />
+            <Animated.View entering={BounceIn} exiting={BounceOut} >
+              <FontAwesome5 name="stop" size={20} color="white" />
+            </Animated.View>  
             </LinearGradient>
           </TouchableOpacity>
         ) : isRunning === false && ar && ar.length > 0 && ((hour === 0 && minutes === 0 && seconds === 0) || (hour === '' && minutes === '' && seconds === '')) ? (
           // Second condition: Show a reset button (or any other button) when not running and array has items
-          <TouchableOpacity onPress={loop}>
-            <LinearGradient
-              colors={['#6A5CFF', '#D946EF']}
-              style={styles.playButton}
-            >
-              <MaterialIcons name="loop" size={20} color="white" />
-            </LinearGradient>
-        </TouchableOpacity>
+            <TouchableOpacity onPress={loop}>
+              <LinearGradient
+                colors={['#6A5CFF', '#D946EF']}
+                style={styles.playButton}
+              >
+                <Animated.View entering={BounceIn} exiting={BounceOut} >
+                  <FontAwesome5 name="play" size={20} color="white" />
+                </Animated.View>
+              </LinearGradient>
+            </TouchableOpacity>
         ) : isRunning === false && ar && (ar.length === 0 || hour > 0 && minutes > 0 && seconds > 0 ) && (
           // Third condition: Default play button
-          <View>
             <TouchableOpacity onPress={startTimer}>
             <LinearGradient
               colors={['#6A5CFF', '#D946EF']}
               style={styles.playButton}
             >
-              <FontAwesome5 name="play" size={20} color="white" />
+              <Animated.View entering={BounceIn} exiting={BounceOut} >
+                <FontAwesome5 name="play" size={20} color="white" />
+              </Animated.View>
             </LinearGradient>
             </TouchableOpacity>
-          </View>
       )}
       <Pressable
           onPress={setLoop}

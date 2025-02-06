@@ -60,14 +60,39 @@ const List = ({setHour,setMinutes,setSeconds,setSelectedId,setVisible,ar,setAr,t
 
   console.log("Seq: ",sequence)
   const renderTimerItem = ({ item }) => (
-    <View style={styles.timerBody}>
+    <View style={
+      [
+      styles.timerBody,ar.includes(item.id) && {borderWidth: 2,borderColor: '#6A5CFF'},
+      selectedTimer === item.id && {borderWidth: 2,borderColor: '#6A5CFF',}
+      ]
+    }>
       {toggleLoop === true ? (
         <Pressable 
         delayLongPress={1000} 
         onPress={() =>toggleItem(item)} 
         disabled={isRunning}
-        style={[styles.timerItem,ar.includes(item.id) && {borderWidth: 2,borderColor: '#6A5CFF',},{ opacity: isRunning ? 0.5 : 1}]}
+        style={[styles.timerItem,{ opacity: isRunning ? 0.5 : 1}]}
       >
+        {toggleLoop === true &&(
+            <View >
+              {sequence.map((seq, index) => (
+              <View key={index} style={styles.indexNumber}>
+                {item.id === seq.id &&(
+                  <Text style={
+                    { color:'white', 
+                      fontSize:10, 
+                      fontWeight:'800',
+                      paddingHorizontal:6,
+                      paddingVertical:13,
+                    }
+                  } 
+                    key={seq.id}>{index}
+                  </Text>
+                )}
+              </View>
+              ))}
+            </View>
+          )}
         <MaterialCommunityIcons name="timer-sand" size={24} color="#fff" />
         <View style={[styles.timerstrt]}>
           <View style={styles.timerName}>
@@ -78,28 +103,6 @@ const List = ({setHour,setMinutes,setSeconds,setSelectedId,setVisible,ar,setAr,t
           <Text style={styles.timerText}>{item.hour}h</Text>
           <Text style={styles.timerText}>{item.minutes}m</Text>
           <Text style={styles.timerText}>{item.seconds}s</Text>
-          {toggleLoop === true &&(
-            <View style={styles.loopOverlay}>
-              {sequence.map((seq, index) => (
-              <View key={index}>
-                {item.id === seq.id &&(
-                  <Text style={
-                    { color:'white', 
-                      backgroundColor:'#664EFF', 
-                      fontSize:10, 
-                      paddingHorizontal:3,
-                      paddingVertical:3,
-                      fontWeight:'800',
-                      borderRadius: 30,
-                    }
-                  } 
-                    key={seq.id}>{index}
-                  </Text>
-                )}
-              </View>
-              ))}
-            </View>
-          )}
         </View>
       </Pressable>
       ):(
@@ -108,7 +111,7 @@ const List = ({setHour,setMinutes,setSeconds,setSelectedId,setVisible,ar,setAr,t
         onPress={() =>editSelectedTimer(item.id)} 
         onLongPress={handlePress} 
         disabled={isRunning}
-        style={[styles.timerItem,selectedTimer === item.id && {borderWidth: 2,borderColor: '#6A5CFF',},{ opacity: isRunning ? 0.5 : 1}]}
+        style={[styles.timerItem,{ opacity: isRunning ? 0.5 : 1}]}
       >
         <MaterialCommunityIcons name="timer-sand" size={24} color="#fff" />
         <View style={[styles.timerstrt,toggleLoop === true && {gap:50}]}>
@@ -126,7 +129,7 @@ const List = ({setHour,setMinutes,setSeconds,setSelectedId,setVisible,ar,setAr,t
                 <AntDesign name="edit" size={24} color="#fff" />
               </Pressable>
               <Pressable onPress={()=>handleDelete(item.id)}>
-                <AntDesign name="delete" size={24} color="#fff" />
+                <AntDesign name="delete" size={24} color="red" />
               </Pressable>
             </View>
           )}
@@ -153,19 +156,10 @@ export default List;
 const styles = StyleSheet.create({
   timerBody:{
     flexDirection:'row',
-    gap:10,
-    alignItems:'center',
-    // width: 400
-  },
-  timerItem: {
-    padding: 10,
     borderWidth: 1,
     borderColor: '#000000',
     borderRadius: 50,
-    marginTop: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginBottom:5,
     shadowColor: "#000000",
     shadowOffset: {
       width: 0,
@@ -174,7 +168,39 @@ const styles = StyleSheet.create({
     position:'relative',
     shadowOpacity:  0.17,
     shadowRadius: 3.05,
-    elevation: 4
+    elevation:4,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  timerItem: {
+    padding: 10,
+    // borderWidth: 1,
+    // borderColor: '#000000',
+    // borderRadius: 50,
+    // marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: "relative",
+    // shadowColor: "#000000",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 3,
+    // },
+    // height: "80%",
+    // position:'relative',
+    // shadowOpacity:  0.17,
+    // shadowRadius: 3.05,
+    // elevation: 4
+  },
+  indexNumber:{
+    borderTopLeftRadius:50,
+    // padding:10
+    borderBottomLeftRadius:50,
+    backgroundColor:'#6A5CFF',
+    position: "absolute",
+    bottom:-20,
+    left: -15,
   },
   timerText: {
     fontSize: 12,
@@ -195,21 +221,15 @@ const styles = StyleSheet.create({
     width:'90%'
   },
   editOverlay:{
-    backgroundColor:'rgba(52, 52, 52, 0.8)',
+    backgroundColor:'rgba(10, 10, 10, 0.9)',
     position:'absolute',
     borderRadius: 50,
-    paddingHorizontal:50,
     paddingVertical:10,
-    left:-33,
-    right:-8.5,
-    bottom:-11.5,
+    left:-42,
+    right:-15.5,
+    bottom:-13.5,
     flexDirection:'row',
-    paddingLeft:108,
-    gap:50
+    paddingLeft:230,
+    gap:30
   },
-  loopOverlay:{
-    position:'absolute',
-    top:0,
-    left:-35
-  }
 });

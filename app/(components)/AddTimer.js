@@ -3,6 +3,7 @@ import { TextInput, View, StyleSheet, TouchableOpacity, Text, Pressable } from '
 import { useDatabase, createTable, insertTimer,updateTimer } from '@/app/hooks/database';
 import Feather from '@expo/vector-icons/Feather';
 import { LinearGradient } from 'expo-linear-gradient';
+import Animated, { LightSpeedInRight, LightSpeedOutLeft  } from 'react-native-reanimated';
 
 const AddTimer = ({ hours, setHours, minutes, setMinutes, seconds, setSeconds,selectedId,setSelectedId,setVisible}) => {
   const [name, setName] = useState('');
@@ -75,7 +76,7 @@ const AddTimer = ({ hours, setHours, minutes, setMinutes, seconds, setSeconds,se
   };
 
   return (
-    <View style={styles.container}>
+    <Animated.View entering={LightSpeedInRight} exiting={ LightSpeedOutLeft } style={styles.container}>
       <TouchableOpacity  style={styles.exit} onPress={handlePress}>
         <Feather name="x" size={24} color="#fff" />
       </TouchableOpacity>
@@ -87,25 +88,15 @@ const AddTimer = ({ hours, setHours, minutes, setMinutes, seconds, setSeconds,se
         style={styles.input}
       />
       {selectedId.length === 0 ? (
-        <Pressable onPress={handleInsert}>
-          <LinearGradient
-            colors={['#6A5CFF', '#D946EF']}
-            style={styles.createTimer}
-          >
+        <Pressable onPress={handleInsert}  style={styles.createTimer}>
             <Text style={styles.addTimer}>ADD TIMER</Text>
-          </LinearGradient>
         </Pressable>
       ):(
-        <Pressable onPress={handleUpdate}>
-          <LinearGradient
-            colors={['#6A5CFF', '#D946EF']}
-            style={styles.createTimer}
-          >
-          <Text style={styles.addTimer}>UPDATE</Text>
-        </LinearGradient>  
+        <Pressable onPress={handleUpdate}  style={styles.createTimer}>
+          <Text style={styles.addTimer}>UPDATE</Text> 
         </Pressable>
       )}
-    </View>
+    </Animated.View>
   );
 };
 
@@ -116,7 +107,7 @@ const styles = StyleSheet.create({
     marginTop:20,
     padding: 50,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',  
-    borderRadius: 16,
+    borderRadius: 40,
     shadowColor: '#000',  
     shadowOffset: { width: 0, height: 4 },  
     shadowOpacity: 0.1,
@@ -129,7 +120,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 8,
     color:'#FFF',
-    borderRadius: 5,
+    borderRadius: 40,
     backgroundColor:'rgba(52, 52, 52, 0.8)',
     fontFamily:'P2P',
   },
@@ -139,8 +130,8 @@ createText:{
 },
 createTimer:{
   paddingVertical:12,
-  paddingTop:20,
   marginVertical:10,
+  borderRadius: 40,
   shadowColor: "#6C4EB3",
   shadowOffset: {
     width: 0,
@@ -148,7 +139,8 @@ createTimer:{
     },
   shadowOpacity:  0.17,
   shadowRadius: 3.05,
-  elevation: 4
+  elevation: 4,
+  backgroundColor:'#6C4EB3'
 },
 addTimer:{
   fontSize:20,
@@ -159,7 +151,7 @@ addTimer:{
 },
 exit:{
   position:'absolute',
-  left:'127%',
-  top:10
+  left:'123%',
+  top:13
 }
 });
